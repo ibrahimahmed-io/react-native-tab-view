@@ -383,6 +383,7 @@ export default class TabBar<T extends Route> extends React.Component<
             jumpTo,
             width: isWidthDynamic ? 'auto' : `${100 / routes.length}%`,
             style: indicatorStyle,
+            tabStyle,
             getTabWidth: this.getMemoizedTabWidthGettter(
               layout,
               routes,
@@ -441,7 +442,7 @@ export default class TabBar<T extends Route> extends React.Component<
                 onLayout: isWidthDynamic
                   ? (e) => {
                       this.measuredTabWidths[route.key] =
-                        e.nativeEvent.layout.width;
+                        e.nativeEvent.layout.width - tabStyle.marginRight;
 
                       // When we have measured widths for all of the tabs, we should updates the state
                       // We avoid doing separate setState for each layout since it triggers multiple renders and slows down app

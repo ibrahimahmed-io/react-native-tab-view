@@ -64,14 +64,15 @@ export default class TabBarIndicator<T extends Route> extends React.Component<
     (
       position: Animated.Node<number>,
       routes: Route[],
-      getTabWidth: GetTabWidth
+      getTabWidth: GetTabWidth,
+      tabStyle
     ) => {
       const inputRange = routes.map((_, i) => i);
 
       // every index contains widths at all previous indices
       const outputRange = routes.reduce<number[]>((acc, _, i) => {
         if (i === 0) return [0];
-        return [...acc, acc[i - 1] + getTabWidth(i - 1)];
+        return [...acc, acc[i - 1] + getTabWidth(i - 1) + tabStyle.marginRight];
       }, []);
 
       const translateX = interpolate(position, {
@@ -109,11 +110,12 @@ export default class TabBarIndicator<T extends Route> extends React.Component<
       width,
       style,
       layout,
+      tabStyle
     } = this.props;
     const { routes } = navigationState;
 
     const translateX =
-      routes.length > 1 ? this.getTranslateX(position, routes, getTabWidth) : 0;
+      routes.length > 1 ? this.getTranslateX(position, routes, getTabWidth, tabStyle) : 0;
 
     const indicatorWidth =
       width === 'auto'
