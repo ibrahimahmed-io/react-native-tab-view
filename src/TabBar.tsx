@@ -54,6 +54,7 @@ export type Props<T extends Route> = SceneRendererProps & {
   onTabPress?: (scene: Scene<T> & Event) => void;
   onTabLongPress?: (scene: Scene<T>) => void;
   tabStyle?: StyleProp<ViewStyle>;
+  tabMarginRight?: number;
   indicatorStyle?: StyleProp<ViewStyle>;
   indicatorContainerStyle?: StyleProp<ViewStyle>;
   labelStyle?: StyleProp<TextStyle>;
@@ -341,6 +342,7 @@ export default class TabBar<T extends Route> extends React.Component<
       onTabPress,
       onTabLongPress,
       tabStyle,
+      tabMarginRight,
       labelStyle,
       indicatorStyle,
       contentContainerStyle,
@@ -383,7 +385,7 @@ export default class TabBar<T extends Route> extends React.Component<
             jumpTo,
             width: isWidthDynamic ? 'auto' : `${100 / routes.length}%`,
             style: indicatorStyle,
-            tabStyle,
+            tabMarginRight,
             getTabWidth: this.getMemoizedTabWidthGettter(
               layout,
               routes,
@@ -442,7 +444,7 @@ export default class TabBar<T extends Route> extends React.Component<
                 onLayout: isWidthDynamic
                   ? (e) => {
                       this.measuredTabWidths[route.key] =
-                        e.nativeEvent.layout.width - tabStyle.marginRight;
+                        e.nativeEvent.layout.width - (tabMarginRight || 0);
 
                       // When we have measured widths for all of the tabs, we should updates the state
                       // We avoid doing separate setState for each layout since it triggers multiple renders and slows down app

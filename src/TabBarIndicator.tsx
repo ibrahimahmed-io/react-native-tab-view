@@ -18,6 +18,7 @@ export type Props<T extends Route> = SceneRendererProps & {
   width: string | number;
   style?: StyleProp<ViewStyle>;
   getTabWidth: GetTabWidth;
+  tabMarginRight?: number;
 };
 
 const { multiply, Extrapolate } = Animated;
@@ -65,14 +66,17 @@ export default class TabBarIndicator<T extends Route> extends React.Component<
       position: Animated.Node<number>,
       routes: Route[],
       getTabWidth: GetTabWidth,
-      tabStyle
+      tabMarginRight
     ) => {
       const inputRange = routes.map((_, i) => i);
 
       // every index contains widths at all previous indices
       const outputRange = routes.reduce<number[]>((acc, _, i) => {
         if (i === 0) return [0];
-        return [...acc, acc[i - 1] + getTabWidth(i - 1) + tabStyle.marginRight];
+        return [
+          ...acc,
+          acc[i - 1] + getTabWidth(i - 1) + (tabMarginRight || 0),
+        ];
       }, []);
 
       const translateX = interpolate(position, {
@@ -110,12 +114,14 @@ export default class TabBarIndicator<T extends Route> extends React.Component<
       width,
       style,
       layout,
-      tabStyle
+      tabMarginRight,
     } = this.props;
     const { routes } = navigationState;
 
     const translateX =
-      routes.length > 1 ? this.getTranslateX(position, routes, getTabWidth, tabStyle) : 0;
+      routes.length > 1
+        ? this.getTranslateX(position, routes, getTabWidth, tabMarginRight)
+        : 0;
 
     const indicatorWidth =
       width === 'auto'
